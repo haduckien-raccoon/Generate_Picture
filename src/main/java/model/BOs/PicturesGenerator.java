@@ -94,7 +94,9 @@ public class PicturesGenerator implements Runnable {
         ShapeManagement m;
         int numImages = Objects.requireNonNull(new File(PICTURES_DIR).list((dir, name) -> (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png")))).length;
         if (shape instanceof Hexagon) {
-            m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), height, width, numImages);
+			int imagesToUse = Math.min(numImages, this.smallImages);
+            // m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), height, width, numImages);
+			m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), height, width, imagesToUse);
         } else {
         	m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), new Dimension(width, height));
         }

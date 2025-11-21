@@ -17,6 +17,4 @@ public class HomeServlet extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
 		rd.forward(request, response);
 	}
-
-
 }

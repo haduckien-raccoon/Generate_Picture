@@ -239,6 +239,23 @@
                             <input name="height" type="number" value="1000" required class="form-control">
                         </div>
                     </div>
+                    <div class="form-group row col-md-12 mt-3">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="chkFrame">
+                                <label class="form-check-label font-weight-bold" for="chkFrame">
+                                    Create Border for Image
+                                </label>
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-6">
+                            <label for="colorPicker">Choose color for border:</label>
+                            <input type="color" id="colorPicker" name="color" class="form-control" value="#000000" disabled style="height: 40px; padding: 3px;">
+                            <small class="form-text text-muted">Click checkbox to choose color</small>
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </div>
@@ -271,6 +288,15 @@ var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML = slider.value;
 slider.oninput = function() { output.innerHTML = this.value; }
+$('#chkFrame').change(function() {
+        if(this.checked) {
+            // Nếu check: Cho phép chọn màu
+            $('#colorPicker').prop('disabled', false);
+        } else {
+            // Nếu bỏ check: Disable ô màu (Backend sẽ nhận null)
+            $('#colorPicker').prop('disabled', true);
+        }
+    });
 </script>
 </body>
 </html>

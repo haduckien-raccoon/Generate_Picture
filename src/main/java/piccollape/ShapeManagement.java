@@ -1,5 +1,6 @@
 package piccollape;
 
+import java.awt.Color; // Import màu
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,24 +29,29 @@ public class ShapeManagement {
 		this.finalPictureDimension = defaultShape.getFinalPictureSize(numImages, rows, width);
 	}
 
-	public void run(String name,int smallImages) {
+	// CẬP NHẬT: Thêm tham số Color frameColor vào hàm run
+	public void run(String name, int smallImages, Color frameColor) {
 		try {
 			ImageManager imageManager = new ImageManager(workingDir);
 			ArrayList<Image> images = imageManager.getImages();
+			
 			// change size of images
 			// change bitmap of images
 			// set coordinates in images
 			Collections.shuffle(images);
+			
 			if (smallImages <= images.size()) {
 				images = new ArrayList<Image>(images.subList(0, smallImages));
-				// Use the randomImages list for further processing or displaying the images
 			}
+			
 			Collections.shuffle(images);
 			images = defaultShape.getCoordinates(finalPictureDimension, images);
-			imageManager.writeImage(images, finalPictureDimension, savingDir, name, defaultShape);
+			
+			// CẬP NHẬT: Truyền frameColor vào hàm writeImage
+			imageManager.writeImage(images, finalPictureDimension, savingDir, name, defaultShape, frameColor);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -1,5 +1,6 @@
 package model.BOs;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -9,6 +10,9 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 
+import constants.FileStatus;
+import constants.QueryStatus;
+import model.beans.User;
 import model.daos.GeneratedPictureDAO;
 import model.daos.QueryTopicDAO;
 import piccollape.DefaultShape;
@@ -16,9 +20,6 @@ import piccollape.Dimension;
 import piccollape.Hexagon;
 import piccollape.PixabayImageSearch;
 import piccollape.ShapeManagement;
-import constants.FileStatus;
-import constants.QueryStatus;
-import model.beans.User;
 
 public class PicturesGenerator implements Runnable {
 	User user;
@@ -29,10 +30,10 @@ public class PicturesGenerator implements Runnable {
 	int smallImages; 
 	int largeImages;
 	String topic;
-
+	String colorHex;
 	
 	public PicturesGenerator(User user, DefaultShape shape, int width, int height, int variety, int smallImages,
-			int largeImages, String topic) {
+			int largeImages, String topic, String colorHex) {
 		this.user = user;
 		this.shape = shape;
 		this.width = width;
@@ -41,6 +42,7 @@ public class PicturesGenerator implements Runnable {
 		this.smallImages = smallImages;
 		this.largeImages = largeImages;
 		this.topic = topic;
+		this.colorHex = colorHex;
 	}
 
 	@Override
@@ -96,7 +98,20 @@ public class PicturesGenerator implements Runnable {
         } else {
         	m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), new Dimension(width, height));
         }
-        m.run(FILE_NAME, smallImages);
+
+		// Chuyển đổi mã Hex sang đối tượng Color
+        Color frameColor = null;
+        if (this.colorHex != null && !this.colorHex.isEmpty()) {
+            try {
+                // Hỗ trợ cả có dấu # hoặc không
+                String hex = this.colorHex.startsWith("#") ? this.colorHex : "#" + this.colorHex;
+                frameColor = Color.decode(hex);
+            } catch (NumberFormatException e) {
+                System.out.println("Mã màu không hợp lệ, sẽ không vẽ khung.");
+            }
+        }
+
+        m.run(FILE_NAME, smallImages, frameColor);
 	}
 	
 }

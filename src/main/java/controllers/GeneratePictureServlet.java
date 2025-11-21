@@ -16,56 +16,6 @@ import piccollape.DefaultShape;
 import piccollape.Hexagon;
 import piccollape.Rectangle;
 
-// @WebServlet("/pictures/generation")
-// public class GeneratePictureServlet extends HttpServlet {
-// 	private static final long serialVersionUID = 1L;
-
-// 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-// 			throws ServletException, IOException {
-
-//         DefaultShape SELECTED_SHAPE;
-
-// //        System.out.println("Choose your shape (0: Rectangle | 1: Hexagon): ");
-//         try {
-//         	//valid data
-//             int shapeType = Integer.parseInt(request.getParameter("shape"));
-//             int width = Integer.parseInt(request.getParameter("width"));
-//             int height = Integer.parseInt(request.getParameter("height"));
-//             int variety = Integer.parseInt(request.getParameter("variety"));
-//             int smallImages=Integer.parseInt(request.getParameter("smallImages"));
-//             int largeImages=Integer.parseInt(request.getParameter("largeImages"));
-//             String topic=request.getParameter("topic");
-//             if(topic.isBlank()|| topic==null) throw new Exception("topic parameter is invalid");
-            
-// 			User user = (User) request.getSession().getAttribute("user");
-//             if (shapeType == 0) {
-//                 SELECTED_SHAPE = new Rectangle();
-                
-//             } else if (shapeType == 1) {
-//                 SELECTED_SHAPE = new Hexagon();
-//             } else {
-//             	throw new Exception("shape parameter is invalid");
-//             }
-//             //start generate picture in new thread
-//             new Thread(new PicturesGenerator( user,SELECTED_SHAPE,width,height,variety, smallImages,largeImages,topic)).start();
-//             request.getSession().setAttribute("message", "Pictures is generating... You can check progress at profile page!");
-//             response.sendRedirect(request.getContextPath()+"/home");
-// 		} catch (Exception e) {
-// 			e.printStackTrace();
-// 			request.getSession().setAttribute("message", "Data is invalid");
-// 			response.sendRedirect(request.getContextPath()+"/home");
-// 		}
-
-
-
-// 	}
-
-// 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-// 			throws ServletException, IOException {
-// 		doGet(request, response);
-// 	}
-
-// }
 @WebServlet("/pictures/generation")
 public class GeneratePictureServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -76,31 +26,35 @@ public class GeneratePictureServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy dữ liệu từ request
-            int shapeType = Integer.parseInt(request.getParameter("shape"));
-            int width = Integer.parseInt(request.getParameter("width"));
-            int height = Integer.parseInt(request.getParameter("height"));
-            int variety = Integer.parseInt(request.getParameter("variety"));
-            int smallImages = Integer.parseInt(request.getParameter("smallImages"));
-            int largeImages = Integer.parseInt(request.getParameter("largeImages"));
-            String topic = request.getParameter("topic");
+            int shapeType = requireIntMin(request, "shape", 0);
+            int width = requireIntMin(request, "width", 1);
+            int height = requireIntMin(request, "height", 1);
+            int variety = requireIntMin(request, "variety", 1);
+            int smallImages = requireIntMin(request, "smallImages", 1);
+            int largeImages = requireIntMin(request, "largeImages", 1);
+            String topic = requireNonBlankParam(request, "topic");
+            String colorHex = request.getParameter("color");
 
             DefaultShape SELECTED_SHAPE;
-            if (shapeType == 0) SELECTED_SHAPE = new Rectangle();
-            else if (shapeType == 1) SELECTED_SHAPE = new Hexagon();
-            else throw new Exception("shape parameter is invalid");
+            if (shapeType == 0) {
+                SELECTED_SHAPE = new Rectangle();
+            } else if (shapeType == 1) {
+                SELECTED_SHAPE = new Hexagon();
+            } else {
+                throw new IllegalArgumentException("shape parameter is invalid");
+            }
 
             User user = (User) request.getSession().getAttribute("user");
+            requireUser(user);
 
-            // Submit task vào thread pool thay vì tạo thread mới
-            executor.submit(new PicturesGenerator(user, SELECTED_SHAPE, width, height, variety, smallImages, largeImages, topic));
+            executor.submit(new PicturesGenerator(user, SELECTED_SHAPE, width, height, variety, smallImages, largeImages, topic, colorHex));
 
             request.getSession().setAttribute("message", "Pictures is generating... You can check progress at profile page!");
             response.sendRedirect(request.getContextPath() + "/home");
 
         } catch (Exception e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("message", "Data is invalid");
+            log("Invalid request data", e);
+            request.getSession().setAttribute("message", e.getMessage() != null ? e.getMessage() : "Data is invalid");
             response.sendRedirect(request.getContextPath() + "/home");
         }
     }
@@ -108,5 +62,35 @@ public class GeneratePictureServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
+    }
+    
+    private int requireIntMin(HttpServletRequest request, String name, int minInclusive) {
+        String raw = request.getParameter(name);
+        if (raw == null) {
+            throw new IllegalArgumentException(name + " parameter is missing");
+        }
+        try {
+            int value = Integer.parseInt(raw.trim());
+            if (value < minInclusive) {
+                throw new IllegalArgumentException(name + " must be >= " + minInclusive);
+            }
+            return value;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(name + " must be a number");
+        }
+    }
+
+    private String requireNonBlankParam(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(name + " parameter is invalid");
+        }
+        return value.trim();
+    }
+
+    private void requireUser(User user) {
+        if (user == null) {
+            throw new IllegalStateException("User session is invalid");
+        }
     }
 }

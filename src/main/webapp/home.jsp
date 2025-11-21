@@ -255,6 +255,24 @@
                             <small class="form-text text-muted">Click checkbox to choose color</small>
                         </div>
                     </div>
+                    <div class="card mt-3 p-3" style="background: #f8f9fa; border: 1px solid #eee;">
+                        <h5 class="text-primary">Artistic Mode (Optional)</h5>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="font-weight-bold">Choose Style:</label>
+                                <select name="artStyle" class="form-control" id="artStyle">
+                                    <option value="0">None (Default)</option>
+                                    <option value="1">Text Shape (Arrange images as text)</option>
+                                    <option value="2">Polaroid Frame + Signature</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <label class="font-weight-bold">Caption / Text:</label>
+                                <input type="text" name="artText" id="artText" class="form-control" maxlength="15" placeholder="e.g. LOVE, TRAVEL..." disabled>
+                                <small class="text-muted">Text used for shape or signature.</small>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </form>
@@ -295,6 +313,15 @@ $('#chkFrame').change(function() {
         } else {
             // Nếu bỏ check: Disable ô màu (Backend sẽ nhận null)
             $('#colorPicker').prop('disabled', true);
+        }
+    });
+    $('#artStyle').change(function() {
+        var style = $(this).val();
+        if(style == "0") {
+            $('#artText').prop('disabled', true);
+            $('#artText').val(''); // Xóa text nếu chọn None
+        } else {
+            $('#artText').prop('disabled', false);
         }
     });
 </script>

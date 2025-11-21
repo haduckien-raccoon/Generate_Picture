@@ -1,15 +1,16 @@
 package piccollape;
 
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStream;
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 
 public class Image {
     private final File path;
@@ -36,6 +37,9 @@ public class Image {
     public int getHeight() {
         return size.getHeight();
     }
+    public File getPath() {
+        return path;
+    }
 
     /**
      * Gets image dimensions for given file
@@ -49,10 +53,11 @@ public class Image {
             throw new IOException("No extension for file: " + imgFile.getAbsolutePath());
         String suffix = imgFile.getName().substring(pos + 1);
         Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        
         while(iter.hasNext()) {
             ImageReader reader = iter.next();
-            try {
-                ImageInputStream stream = new FileImageInputStream(imgFile);
+            // Sử dụng try-with-resources để tự động đóng stream
+            try (ImageInputStream stream = new FileImageInputStream(imgFile)) {
                 reader.setInput(stream);
                 int width = reader.getWidth(reader.getMinIndex());
                 int height = reader.getHeight(reader.getMinIndex());

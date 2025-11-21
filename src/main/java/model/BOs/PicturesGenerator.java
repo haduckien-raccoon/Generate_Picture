@@ -20,6 +20,7 @@ import piccollape.Dimension;
 import piccollape.Hexagon;
 import piccollape.PixabayImageSearch;
 import piccollape.ShapeManagement;
+import piccollape.TextShape;
 
 public class PicturesGenerator implements Runnable {
 	User user;
@@ -31,9 +32,11 @@ public class PicturesGenerator implements Runnable {
 	int largeImages;
 	String topic;
 	String colorHex;
+	String artStyle; // "0": None, "1": TextShape, "2": Polaroid
+    String artText;
 	
 	public PicturesGenerator(User user, DefaultShape shape, int width, int height, int variety, int smallImages,
-			int largeImages, String topic, String colorHex) {
+			int largeImages, String topic, String colorHex, String artStyle, String artText) {
 		this.user = user;
 		this.shape = shape;
 		this.width = width;
@@ -43,6 +46,8 @@ public class PicturesGenerator implements Runnable {
 		this.largeImages = largeImages;
 		this.topic = topic;
 		this.colorHex = colorHex;
+		this.artStyle = artStyle;
+		this.artText = artText;
 	}
 
 	@Override
@@ -90,14 +95,27 @@ public class PicturesGenerator implements Runnable {
 		if(!saved_folder.exists()) {
 			saved_folder.mkdirs();
 		}
+		boolean isPolaroid = "2".equals(artStyle);
+        
+        // Nếu chọn Style 1 (TextShape) -> Ghi đè shape hiện tại
+		if ("1".equals(artStyle) && artText != null && !artText.isEmpty()) {
+			// [FIX] Kiểm tra nếu height đang là số dòng (quá nhỏ, ví dụ < 50) do người dùng chọn Hexagon
+            // thì tự động tính lại height theo pixel (ví dụ lấy 1/2 width) để vẽ chữ được đẹp
+            if (this.height < 50) {
+                this.height = this.width / 2;
+            }
+			this.shape = new TextShape(artText, width, height); 
+	   }
 
         ShapeManagement m;
         int numImages = Objects.requireNonNull(new File(PICTURES_DIR).list((dir, name) -> (name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png")))).length;
+        
         if (shape instanceof Hexagon) {
 			int imagesToUse = Math.min(numImages, this.smallImages);
             // m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), height, width, numImages);
 			m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), height, width, imagesToUse);
         } else {
+        	// Ở đây sẽ dùng 'height' mới (đã được fix nếu là TextShape)
         	m = new ShapeManagement(new File(PICTURES_DIR), shape, new File(SAVED_TO_DIR), new Dimension(width, height));
         }
 
@@ -113,7 +131,7 @@ public class PicturesGenerator implements Runnable {
             }
         }
 
-        m.run(FILE_NAME, smallImages, frameColor);
+        m.run(FILE_NAME, smallImages, frameColor, isPolaroid, artText);
 	}
 	
 }

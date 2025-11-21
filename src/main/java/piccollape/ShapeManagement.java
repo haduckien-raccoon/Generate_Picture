@@ -30,28 +30,25 @@ public class ShapeManagement {
 	}
 
 	// CẬP NHẬT: Thêm tham số Color frameColor vào hàm run
-	public void run(String name, int smallImages, Color frameColor) {
-		try {
-			ImageManager imageManager = new ImageManager(workingDir);
-			ArrayList<Image> images = imageManager.getImages();
-			
-			// change size of images
-			// change bitmap of images
-			// set coordinates in images
-			Collections.shuffle(images);
-			
-			if (smallImages <= images.size()) {
-				images = new ArrayList<Image>(images.subList(0, smallImages));
-			}
-			
-			Collections.shuffle(images);
-			images = defaultShape.getCoordinates(finalPictureDimension, images);
-			
-			// CẬP NHẬT: Truyền frameColor vào hàm writeImage
-			imageManager.writeImage(images, finalPictureDimension, savingDir, name, defaultShape, frameColor);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	public void run(String name, int smallImages, Color frameColor, boolean isPolaroid, String textCaption) {
+        try {
+            ImageManager imageManager = new ImageManager(workingDir);
+            ArrayList<Image> images = imageManager.getImages();
+            
+            Collections.shuffle(images);
+            
+            if (smallImages <= images.size()) {
+                images = new ArrayList<Image>(images.subList(0, smallImages));
+            }
+            
+            Collections.shuffle(images);
+            images = defaultShape.getCoordinates(finalPictureDimension, images);
+            
+            // Truyền đầy đủ tham số xuống ImageManager
+            imageManager.writeImage(images, finalPictureDimension, savingDir, name, defaultShape, frameColor, isPolaroid, textCaption);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

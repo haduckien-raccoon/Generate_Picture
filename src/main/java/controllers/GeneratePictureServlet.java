@@ -34,6 +34,9 @@ public class GeneratePictureServlet extends HttpServlet {
             int largeImages = requireIntMin(request, "largeImages", 1);
             String topic = requireNonBlankParam(request, "topic");
             String colorHex = request.getParameter("color");
+            String artStyle = request.getParameter("artStyle");
+            String artText = request.getParameter("artText");
+
 
             DefaultShape SELECTED_SHAPE;
             if (shapeType == 0) {
@@ -47,7 +50,7 @@ public class GeneratePictureServlet extends HttpServlet {
             User user = (User) request.getSession().getAttribute("user");
             requireUser(user);
 
-            executor.submit(new PicturesGenerator(user, SELECTED_SHAPE, width, height, variety, smallImages, largeImages, topic, colorHex));
+            executor.submit(new PicturesGenerator(user, SELECTED_SHAPE, width, height, variety, smallImages, largeImages, topic, colorHex, artStyle, artText));
 
             request.getSession().setAttribute("message", "Pictures is generating... You can check progress at profile page!");
             response.sendRedirect(request.getContextPath() + "/home");

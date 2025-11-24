@@ -3,116 +3,307 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.beans.User"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Profile</title>
-<link type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-<link type="text/css" rel="stylesheet" href="./fonts/icomoon/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - Picture Generator</title>
+<link type="text/css" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link type="text/css" rel="stylesheet" href="./css/owl.carousel.min.css">
 <link type="text/css" rel="stylesheet" href="./css/bootstrap.min.css">
 
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
-        background: #d0e7ff;
-        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
     }
 
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+
     #sidebar {
-        background: #4e73d1;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
         color: #fff;
-        min-width: 250px;
+        min-width: 280px;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 100;
     }
 
     #sidebar a {
         color: #fff;
         text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    #sidebar a:hover {
+        color: #ffd700;
+        transform: translateX(5px);
     }
 
     #sidebar .logo {
         border-radius: 50%;
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         background-size: cover;
-        margin: 0 auto 10px auto;
+        margin: 0 auto 15px auto;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    #sidebar h5 {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 20px;
+    }
+
+    #sidebar .btn-outline-light {
+        font-size: 14px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.1);
+        transition: all 0.3s;
+    }
+
+    #sidebar .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: white;
+    }
+
+    #sidebar ul li {
+        margin: 10px 0;
+    }
+
+    #sidebar ul li a {
+        padding: 12px 20px;
+        display: block;
+        border-radius: 10px;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+
+    #sidebar ul li a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(5px);
     }
 
     #content {
-        background: #e6f0ff;
+        background: transparent;
         min-height: 100vh;
-        padding: 30px;
+        padding: 40px;
         flex: 1;
     }
 
     .section_heading h3 {
-        color: #2b3e80;
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 32px;
+    }
+
+    .line {
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        width: 80px;
+        margin: 15px auto;
+        border-radius: 10px;
     }
 
     .single-timeline-area {
-        background: #ffffff;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
         display: flex;
         flex-direction: column;
         width: 100%;
+        transition: all 0.3s;
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .single-timeline-area:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    }
+
+    .timeline-date {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f7fafc;
+    }
+
+    .timeline-date p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #718096;
+    }
+
+    .timeline-date .text-info {
+        font-size: 20px;
+        font-weight: 700;
+        color: #667eea !important;
+        margin-bottom: 10px !important;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .badge-secondary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
     }
 
     .timeline-text h6 {
-        color: #333;
-        margin-bottom: 5px;
+        color: #2d3748;
+        margin-bottom: 8px;
         word-wrap: break-word;
+        font-weight: 600;
+        font-size: 15px;
     }
 
     .progress-container {
-        margin-top: 10px;
+        margin-top: 12px;
         width: 100%;
-        background-color: #cce0ff;
-        border-radius: 10px;
-        height: 10px;
+        background-color: #e2e8f0;
+        border-radius: 20px;
+        height: 12px;
         overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #4e73d1, #6770f0);
+        background: linear-gradient(90deg, #667eea, #764ba2);
         transition: width 0.5s ease-in-out;
+        border-radius: 20px;
+    }
+
+    .text-warning {
+        color: #f6ad55 !important;
+        font-weight: 600;
+    }
+
+    .text-success {
+        color: #48bb78 !important;
+        font-weight: 600;
+    }
+
+    .text-danger {
+        color: #f56565 !important;
+        font-weight: 600;
     }
 
     .text-warning strong, .text-success strong, .text-danger strong {
-        display: block;
-        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    .spinner-border {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+    }
+
+    .single-timeline-content {
+        background: #f7fafc;
+        border-radius: 15px;
+        padding: 20px;
+        transition: all 0.3s;
+        border: 2px solid #e2e8f0;
+        height: 100%;
     }
 
     .single-timeline-content:hover {
-        transform: translateY(-2px);
-        transition: all 0.3s ease-in-out;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border-color: #667eea;
+    }
+
+    .timeline-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 10px;
+        color: white;
+        font-size: 18px;
+        transition: all 0.3s;
+    }
+
+    .timeline-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
     .timeline-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
     }
 
     .timeline-item {
-        flex: 1 1 calc(33.333% - 20px);
-        min-width: 250px;
         display: flex;
         flex-direction: column;
     }
 
+    @media (max-width: 992px) {
+        #sidebar {
+            min-width: 240px;
+        }
+        
+        #content {
+            padding: 25px;
+        }
+        
+        .timeline-row {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+    }
+
     @media (max-width: 768px) {
-        .timeline-item {
-            flex: 1 1 100%;
+        .wrapper {
+            flex-direction: column;
+        }
+        
+        #sidebar {
+            min-width: 100%;
+        }
+        
+        #content {
+            padding: 20px;
+        }
+        
+        .timeline-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .section_heading h3 {
+            font-size: 26px;
         }
     }
 
@@ -123,7 +314,31 @@
 <%
 if (request.getAttribute("message") != null) {
 %>
-<script>alert('<%=(request.getAttribute("message"))%>')</script>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        showNotification('<%=(request.getAttribute("message"))%>');
+    });
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: white; padding: 20px 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 9999; animation: slideIn 0.3s ease; max-width: 350px; border-left: 4px solid #667eea;';
+        notification.innerHTML = '<div style="color: #667eea; font-weight: 600; margin-bottom: 5px;">📢 Notification</div><div style="color: #4a5568; font-size: 14px;">' + message + '</div>';
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+</script>
+<style>
+    @keyframes slideIn {
+        from { transform: translateX(400px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(400px); opacity: 0; }
+    }
+</style>
 <%
 }
 %>
@@ -152,10 +367,11 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         <section class="timeline_area section_padding_130">
             <div class="container-fluid">
-                <div class="row justify-content-center mb-4">
-                    <div class="col-12 col-sm-8 col-lg-6 text-center">
-                        <h3 class="section_heading">Our History</h3>
-                        <div class="line" style="height:2px; background:#4e73d1; width:60px; margin:10px auto;"></div>
+                <div class="row justify-content-center mb-5">
+                    <div class="col-12 text-center">
+                        <h3 class="section_heading">📚 Generation History</h3>
+                        <div class="line"></div>
+                        <p style="color: #718096; font-size: 16px; margin-top: 10px;">Track your picture generation projects and downloads</p>
                     </div>
                 </div>
 

@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 
 public class MySQLHandler {
     private static String url = "jdbc:mysql://localhost:3306/picture_collage";
-    private static String user = "haduckien";
-    private static String password = "17092005";
+    private static String user = "root";
+    private static String password = "12341234";
 	public static Connection getConn() {
     	Connection connection = null;
         try {

@@ -1,82 +1,180 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>404 Not Found</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>500 - Server Error</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-    background-color: #f0f4f8;
-    font-family: 'Arvo', serif;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-.page_404 {
+body {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -200px;
+    left: -200px;
+    animation: float 15s infinite ease-in-out;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    bottom: -150px;
+    right: -150px;
+    animation: float 20s infinite ease-in-out reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 30px); }
+}
+
+.error-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 60px 50px;
+    border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
     text-align: center;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.6s ease-out;
 }
 
-.page_404 h1 {
-    font-size: 150px;
-    color: #007bff;
-    font-weight: bold;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    margin: 0;
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.page_404 h3 {
-    font-size: 36px;
-    color: #007bff;
-    margin: 20px 0 10px;
+.error-icon {
+    font-size: 120px;
+    margin-bottom: 20px;
+    animation: shake 3s infinite;
 }
 
-.page_404 p {
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.error-container h1 {
+    font-size: 120px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.error-container h3 {
+    font-size: 32px;
+    color: #2d3748;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.error-container p {
     font-size: 18px;
-    color: #555;
-    margin-bottom: 30px;
+    color: #718096;
+    margin-bottom: 40px;
+    line-height: 1.6;
 }
 
-.link_404 {
-    color: #fff !important;
-    padding: 12px 30px;
-    background: #007bff;
-    border-radius: 25px;
+.btn-home {
+    display: inline-block;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
     text-decoration: none;
+    border-radius: 50px;
     font-size: 16px;
-    transition: background 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
 }
 
-.link_404:hover {
-    background: #0056b3;
+.btn-home:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+    color: white;
     text-decoration: none;
-    color: #fff !important;
+}
+
+.btn-home:active {
+    transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
-    .page_404 h1 {
-        font-size: 100px;
+    .error-container {
+        padding: 40px 30px;
     }
-    .page_404 h3 {
-        font-size: 28px;
+
+    .error-icon {
+        font-size: 80px;
+    }
+
+    .error-container h1 {
+        font-size: 80px;
+    }
+
+    .error-container h3 {
+        font-size: 24px;
+    }
+
+    .error-container p {
+        font-size: 16px;
     }
 }
 </style>
 </head>
 <body>
-<section class="page_404">
-    <h1>404</h1>
-    <h3>Oops! Page not found</h3>
-    <p>The page you are looking for might be removed or temporarily unavailable.</p>
-    <a href="<%=request.getContextPath()%>" class="link_404">Go to Home</a>
-</section>
+
+<div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h1>500</h1>
+    <h3>Internal Server Error</h3>
+    <p>Oops! Something went wrong on our end. Our team has been notified and we're working on fixing it. Please try again later.</p>
+    <a href="<%=request.getContextPath()%>" class="btn-home">🏠 Back to Home</a>
+</div>
+
 </body>
 </html>

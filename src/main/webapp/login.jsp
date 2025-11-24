@@ -178,7 +178,7 @@
     .input-icon {
         position: absolute;
         right: 20px;
-        top: 43px;
+        top: 36px;
         color: #a0aec0;
         font-size: 18px;
     }

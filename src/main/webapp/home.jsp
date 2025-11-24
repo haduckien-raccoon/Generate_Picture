@@ -260,7 +260,7 @@
     .form-control {
         border-radius: 12px;
         border: 2px solid #e2e8f0;
-        padding: 12px 18px;
+        padding: 5px 18px;
         transition: all 0.3s;
         font-size: 15px;
         background: white;
@@ -307,11 +307,14 @@
     .form-check-input {
         width: 20px;
         height: 20px;
+        margin-right: 10px;
         cursor: pointer;
     }
 
     .form-check-label {
         margin: 0;
+        margin-left: 10px;
+        margin-top: 5px;
         cursor: pointer;
     }
 

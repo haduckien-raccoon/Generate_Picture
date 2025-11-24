@@ -62,6 +62,7 @@
     }
 
     .profile-avatar {
+        display: block;
         border-radius: 50%;
         border: 3px solid #667eea;
         width: 50px;

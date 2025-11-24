@@ -55,10 +55,12 @@
     }
 
     #sidebar .logo {
+        display: block;
         border-radius: 50%;
         width: 100px;
         height: 100px;
         background-size: cover;
+        background-position: center;
         margin: 0 auto 15px auto;
         border: 4px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
